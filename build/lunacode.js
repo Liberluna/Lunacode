@@ -17,6 +17,7 @@ function textarea_default() {
   style.width = "100%";
   style.height = "100%";
   style.backgroundColor = "transparent";
+  style.position = "absolute";
   return element;
 }
 
@@ -29,13 +30,21 @@ var lunacode_core_default = class {
     const { element } = options;
     this.element = element;
     const text = element.textContent;
-    element.append(textarea_default());
     element.append((() => {
       const div = document.createElement("div");
       div.style.width = "100%";
       div.style.height = "100%";
-      div.style.background = "azure";
-      div.style.position = "absolute";
+      div.style.background = "transparent";
+      div.style.position = "relative";
+      div.append(textarea_default());
+      div.append((() => {
+        const upelem = document.createElement("div");
+        upelem.style.width = "100%";
+        upelem.style.height = "100%";
+        upelem.style.background = "transparent";
+        upelem.style.position = "absolute";
+        return upelem;
+      })());
       return div;
     })());
   }

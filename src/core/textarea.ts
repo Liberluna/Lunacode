@@ -8,5 +8,6 @@ export default function():HTMLTextAreaElement{
   style.width="100%";
   style.height="100%";
   style.backgroundColor="transparent";
+  style.position="absolute";
   return element;
 }
