@@ -5,10 +5,13 @@ const esm=await esbuild.context({
   entryPoints: JSON.parse(await Deno.readTextFile("entry.json")).entrypoints,
   outdir: './build',
   format:"esm",
+  bundle:true,
+  sourcemap:true,
 });
 const args=Deno.args;
 if(args.includes("--watch")){
   await esm.watch()
 }else{
   const rebuild=await esm.rebuild();
+  Deno.exit()
 }

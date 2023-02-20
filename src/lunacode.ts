@@ -1,1 +1,1 @@
-console.log(1)
+export {default as Lunacode} from "./core/lunacode-core.ts";
