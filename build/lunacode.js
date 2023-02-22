@@ -48,8 +48,8 @@ var create_editor_element_default = () => {
       width: "100%",
       height: "100%",
       backgroundColor: "transparent",
-      position: "absolute",
-      color: "transparent"
+      position: "absolute"
+      //color:"transparent"
     }
   });
   parent.append(topElem);
@@ -60,8 +60,16 @@ var create_editor_element_default = () => {
   };
 };
 
+// src/core/draw.ts
+function draw(options) {
+}
+
 // src/core/lunacode-core.ts
-var lunacode_core_default = class {
+var LunacodeCore = class {
+  element;
+  textarea;
+  editorElement;
+  language;
   constructor(options) {
     options = object_safe_default(options, {
       element: document.createElement("div")
@@ -71,9 +79,23 @@ var lunacode_core_default = class {
     const text = element.textContent;
     const { editorElement, textarea } = create_editor_element_default();
     element.append(editorElement);
+    textarea.addEventListener("input", (event) => {
+      this.#input(event);
+    });
+    this.editorElement = editorElement;
+    this.textarea = textarea;
+  }
+  #input(event) {
+    draw({
+      event,
+      lang: this.language
+    });
+  }
+  setLanguage(language) {
+    this.language = language;
   }
 };
 export {
-  lunacode_core_default as Lunacode
+  LunacodeCore as Lunacode
 };
 //# sourceMappingURL=lunacode.js.map
