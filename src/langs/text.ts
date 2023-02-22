@@ -1,5 +1,5 @@
 import Language from "../core/language.ts";
-export class TextLanguage extends Language{
+export default class TextLanguage extends Language{
   highlight(){
     
   }

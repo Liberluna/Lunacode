@@ -2,6 +2,7 @@ import { objectSafe } from "../utils/index.ts";
 import createEditorElement from "./create-editor-element.ts";
 import draw  from "./draw.ts";
 import Language from "./language.ts";
+import TextLanguage from "../langs/text.ts";
 
 export default class LunacodeCore{
   element:HTMLElement;
@@ -11,11 +12,12 @@ export default class LunacodeCore{
   constructor(options){
     options=objectSafe(options,{
       element:document.createElement("div"),
-      language:
+      language:new TextLanguage()
     });
-    const {element} = options;
+    const {element,language} = options;
 
     this.element=element;
+    this.language=language;
     // backup text
     const text=element.textContent;
     // child to
@@ -31,7 +33,7 @@ export default class LunacodeCore{
   #input(event){
     draw({
       event:event,
-      lang:this.language
+      language:this.language
     });
   }
   setLanguage(language:Language){

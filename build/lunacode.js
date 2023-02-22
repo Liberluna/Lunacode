@@ -62,11 +62,27 @@ var create_editor_element_default = () => {
 
 // src/core/draw.ts
 function draw(options) {
-  const { language: language2, event } = options;
-  language2._req({
+  const { language, event } = options;
+  language._req({
     text: event.target
   });
 }
+
+// src/core/language.ts
+var Language = class {
+  constructor() {
+  }
+  highlight() {
+  }
+  _req(options) {
+  }
+};
+
+// src/langs/text.ts
+var TextLanguage = class extends Language {
+  highlight() {
+  }
+};
 
 // src/core/lunacode-core.ts
 var LunacodeCore = class {
@@ -77,10 +93,11 @@ var LunacodeCore = class {
   constructor(options) {
     options = object_safe_default(options, {
       element: document.createElement("div"),
-      language
+      language: new TextLanguage()
     });
-    const { element } = options;
+    const { element, language } = options;
     this.element = element;
+    this.language = language;
     const text = element.textContent;
     const { editorElement, textarea } = create_editor_element_default();
     element.append(editorElement);
@@ -93,11 +110,11 @@ var LunacodeCore = class {
   #input(event) {
     draw({
       event,
-      lang: this.language
+      language: this.language
     });
   }
-  setLanguage(language2) {
-    this.language = language2;
+  setLanguage(language) {
+    this.language = language;
   }
 };
 export {
