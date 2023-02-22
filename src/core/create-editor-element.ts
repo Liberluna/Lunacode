@@ -26,7 +26,7 @@ export default ()=>{
       height:"100%",
       backgroundColor:"transparent",
       position:"absolute",
-      //color:"transparent"
+      color:"transparent"
     }
   });
   parent.append(topElem);

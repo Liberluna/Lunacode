@@ -48,8 +48,8 @@ var create_editor_element_default = () => {
       width: "100%",
       height: "100%",
       backgroundColor: "transparent",
-      position: "absolute"
-      //color:"transparent"
+      position: "absolute",
+      color: "transparent"
     }
   });
   parent.append(topElem);
