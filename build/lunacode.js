@@ -6,20 +6,59 @@ function object_safe_default(input, sample) {
   return sample;
 }
 
-// src/core/textarea.ts
-function textarea_default() {
-  const element = document.createElement("textarea");
-  const style = element.style;
-  style.border = "none";
-  style.borderRadius = "0px";
-  style.outline = "none";
-  style.resize = "none";
-  style.width = "100%";
-  style.height = "100%";
-  style.backgroundColor = "transparent";
-  style.position = "absolute";
-  return element;
-}
+// src/utils/create-element.ts
+var create_element_default = (tagName, options) => {
+  const tag = document.createElement(tagName);
+  if (options.style) {
+    Object.keys(options.style).forEach((style) => {
+      tag.style[style] = options.style[style];
+    });
+    delete options.style;
+  }
+  Object.keys(options).forEach((attr) => {
+    tag[attr] = options[attr];
+  });
+  return tag;
+};
+
+// src/core/create-editor-element.ts
+var create_editor_element_default = () => {
+  const parent = create_element_default("div", {
+    style: {
+      width: "100%",
+      height: "100%",
+      backgroundColor: "transparent",
+      position: "relative"
+    }
+  });
+  const topElem = create_element_default("div", {
+    style: {
+      width: "100%",
+      height: "100%",
+      backgroundColor: "transparent",
+      position: "absolute"
+    }
+  });
+  const textarea = create_element_default("textarea", {
+    style: {
+      border: "none",
+      borderRadius: "0px",
+      outline: "none",
+      resize: "none",
+      width: "100%",
+      height: "100%",
+      backgroundColor: "transparent",
+      position: "absolute",
+      color: "transparent"
+    }
+  });
+  parent.append(topElem);
+  parent.append(textarea);
+  return {
+    editorElement: parent,
+    textarea
+  };
+};
 
 // src/core/lunacode-core.ts
 var lunacode_core_default = class {
@@ -30,23 +69,8 @@ var lunacode_core_default = class {
     const { element } = options;
     this.element = element;
     const text = element.textContent;
-    element.append((() => {
-      const div = document.createElement("div");
-      div.style.width = "100%";
-      div.style.height = "100%";
-      div.style.background = "transparent";
-      div.style.position = "relative";
-      div.append(textarea_default());
-      div.append((() => {
-        const upelem = document.createElement("div");
-        upelem.style.width = "100%";
-        upelem.style.height = "100%";
-        upelem.style.background = "transparent";
-        upelem.style.position = "absolute";
-        return upelem;
-      })());
-      return div;
-    })());
+    const { editorElement, textarea } = create_editor_element_default();
+    element.append(editorElement);
   }
 };
 export {
