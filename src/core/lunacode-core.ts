@@ -11,6 +11,7 @@ export default class LunacodeCore{
   constructor(options){
     options=objectSafe(options,{
       element:document.createElement("div"),
+      language:
     });
     const {element} = options;
 

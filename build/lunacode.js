@@ -62,6 +62,10 @@ var create_editor_element_default = () => {
 
 // src/core/draw.ts
 function draw(options) {
+  const { language: language2, event } = options;
+  language2._req({
+    text: event.target
+  });
 }
 
 // src/core/lunacode-core.ts
@@ -72,7 +76,8 @@ var LunacodeCore = class {
   language;
   constructor(options) {
     options = object_safe_default(options, {
-      element: document.createElement("div")
+      element: document.createElement("div"),
+      language
     });
     const { element } = options;
     this.element = element;
@@ -91,8 +96,8 @@ var LunacodeCore = class {
       lang: this.language
     });
   }
-  setLanguage(language) {
-    this.language = language;
+  setLanguage(language2) {
+    this.language = language2;
   }
 };
 export {
