@@ -1,6 +1,6 @@
 import { objectSafe } from "../utils/index.ts";
 import createEditorElement from "./create-editor-element.ts";
-import draw  from "./draw.ts";
+import input from "./input.ts";
 import Language from "./language.ts";
 import TextLanguage from "../langs/text.ts";
 
@@ -9,6 +9,7 @@ export default class LunacodeCore{
   textarea:HTMLElement;
   editorElement:HTMLElement;
   language:Language;
+  isIME:boolean;
   constructor(options){
     options=objectSafe(options,{
       element:document.createElement("div"),
@@ -18,6 +19,7 @@ export default class LunacodeCore{
 
     this.element=element;
     this.language=language;
+    this.isIME=false;
     // backup text
     const text=element.textContent;
     // child to
@@ -25,18 +27,34 @@ export default class LunacodeCore{
     element.append(editorElement);
     
     textarea.addEventListener("input",(event)=>{
-      this.#input(event);
+      this.#input({
+        inputEvent:event,
+        imeEndEvent:null
+      });
+    });
+    textarea.addEventListener("compositionstart",(event)=>{
+      this.isIME=true;
+    });
+    textarea.addEventListener("compositionend",(event)=>{
+      this.isIME=false;
+      this.#input({
+        inputEvent:null,
+        imeEndEvent:event
+      });
     });
     this.editorElement=editorElement;
     this.textarea=textarea;
   }
-  #input(event){
-    draw({
-      event:event,
-      language:this.language
+  #input({inputEvent,imeEndEvent}){
+    input.call(this,{
+      inputEvent,
+      imeEndEvent,
+      language:this.language,
+      isIME:this.isIME
     });
   }
   setLanguage(language:Language){
     this.language=language;
   }
+  
 }

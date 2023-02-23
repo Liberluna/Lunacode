@@ -60,21 +60,18 @@ var create_editor_element_default = () => {
   };
 };
 
-// src/core/draw.ts
+// src/core/input.ts
 function draw(options) {
-  const { language, event } = options;
-  language._req({
-    text: event.target
-  });
+  const { language, inputEvent, isIME } = options;
+  console.log(isIME);
+  language.highlight({});
 }
 
 // src/core/language.ts
 var Language = class {
   constructor() {
   }
-  highlight() {
-  }
-  _req(options) {
+  highlight(ctx) {
   }
 };
 
@@ -90,6 +87,7 @@ var LunacodeCore = class {
   textarea;
   editorElement;
   language;
+  isIME;
   constructor(options) {
     options = object_safe_default(options, {
       element: document.createElement("div"),
@@ -98,19 +96,35 @@ var LunacodeCore = class {
     const { element, language } = options;
     this.element = element;
     this.language = language;
+    this.isIME = false;
     const text = element.textContent;
     const { editorElement, textarea } = create_editor_element_default();
     element.append(editorElement);
     textarea.addEventListener("input", (event) => {
-      this.#input(event);
+      this.#input({
+        inputEvent: event,
+        imeEndEvent: null
+      });
+    });
+    textarea.addEventListener("compositionstart", (event) => {
+      this.isIME = true;
+    });
+    textarea.addEventListener("compositionend", (event) => {
+      this.isIME = false;
+      this.#input({
+        inputEvent: null,
+        imeEndEvent: event
+      });
     });
     this.editorElement = editorElement;
     this.textarea = textarea;
   }
-  #input(event) {
-    draw({
-      event,
-      language: this.language
+  #input({ inputEvent, imeEndEvent }) {
+    draw.call(this, {
+      inputEvent,
+      imeEndEvent,
+      language: this.language,
+      isIME: this.isIME
     });
   }
   setLanguage(language) {
