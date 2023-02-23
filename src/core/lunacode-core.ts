@@ -50,7 +50,8 @@ export default class LunacodeCore{
       inputEvent,
       imeEndEvent,
       language:this.language,
-      isIME:this.isIME
+      isIME:this.isIME,
+      target:this.textarea,
     });
   }
   setLanguage(language:Language){

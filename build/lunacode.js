@@ -62,8 +62,16 @@ var create_editor_element_default = () => {
 
 // src/core/input.ts
 function draw(options) {
-  const { language, inputEvent, isIME } = options;
-  console.log(isIME);
+  const {
+    language,
+    inputEvent,
+    imeEndEvent,
+    isIME,
+    target
+  } = options;
+  if (isIME)
+    return;
+  console.log(target.selectionStart, target.selectionEnd, target.selectionDirection);
   language.highlight({});
 }
 
@@ -124,7 +132,8 @@ var LunacodeCore = class {
       inputEvent,
       imeEndEvent,
       language: this.language,
-      isIME: this.isIME
+      isIME: this.isIME,
+      target: this.textarea
     });
   }
   setLanguage(language) {
