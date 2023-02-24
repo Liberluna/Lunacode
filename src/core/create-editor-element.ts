@@ -26,13 +26,15 @@ export default ()=>{
       height:"100%",
       backgroundColor:"transparent",
       position:"absolute",
-      color:"transparent"
+      color:"transparent",
+      size:"1em"
     }
   });
   parent.append(topElem);
   parent.append(textarea);
   return {
     editorElement:parent,
-    textarea:textarea
+    textarea:textarea,
+    topElement:topElem,
   };
 }

@@ -10,6 +10,7 @@ export default class LunacodeCore{
   editorElement:HTMLElement;
   language:Language;
   isIME:boolean;
+  topElement:HTMLElement;
   constructor(options){
     options=objectSafe(options,{
       element:document.createElement("div"),
@@ -23,7 +24,7 @@ export default class LunacodeCore{
     // backup text
     const text=element.textContent;
     // child to
-    const {editorElement,textarea}=createEditorElement();
+    const {editorElement,textarea,topElement}=createEditorElement();
     element.append(editorElement);
     
     textarea.addEventListener("input",(event)=>{
@@ -44,6 +45,7 @@ export default class LunacodeCore{
     });
     this.editorElement=editorElement;
     this.textarea=textarea;
+    this.topElement=topElement;
   }
   #input({inputEvent,imeEndEvent}){
     input.call(this,{
@@ -51,7 +53,8 @@ export default class LunacodeCore{
       imeEndEvent,
       language:this.language,
       isIME:this.isIME,
-      target:this.textarea,
+      textarea:this.textarea,
+      topElement:this.topElement
     });
   }
   setLanguage(language:Language){

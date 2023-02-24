@@ -49,14 +49,16 @@ var create_editor_element_default = () => {
       height: "100%",
       backgroundColor: "transparent",
       position: "absolute",
-      color: "transparent"
+      color: "transparent",
+      size: "1em"
     }
   });
   parent.append(topElem);
   parent.append(textarea);
   return {
     editorElement: parent,
-    textarea
+    textarea,
+    topElement: topElem
   };
 };
 
@@ -67,12 +69,22 @@ function draw(options) {
     inputEvent,
     imeEndEvent,
     isIME,
-    target
+    textarea,
+    topElement
   } = options;
   if (isIME)
     return;
-  console.log(target.selectionStart, target.selectionEnd, target.selectionDirection);
-  language.highlight({});
+  topElement.innerHTML = "";
+  for (const char of textarea.value) {
+    const elem = create_element_default("span", {
+      textContent: char
+    });
+    topElement.append(char);
+  }
+  language.highlight({
+    setColor(start, end) {
+    }
+  });
 }
 
 // src/core/language.ts
@@ -96,6 +108,7 @@ var LunacodeCore = class {
   editorElement;
   language;
   isIME;
+  topElement;
   constructor(options) {
     options = object_safe_default(options, {
       element: document.createElement("div"),
@@ -106,7 +119,7 @@ var LunacodeCore = class {
     this.language = language;
     this.isIME = false;
     const text = element.textContent;
-    const { editorElement, textarea } = create_editor_element_default();
+    const { editorElement, textarea, topElement } = create_editor_element_default();
     element.append(editorElement);
     textarea.addEventListener("input", (event) => {
       this.#input({
@@ -126,6 +139,7 @@ var LunacodeCore = class {
     });
     this.editorElement = editorElement;
     this.textarea = textarea;
+    this.topElement = topElement;
   }
   #input({ inputEvent, imeEndEvent }) {
     draw.call(this, {
@@ -133,7 +147,8 @@ var LunacodeCore = class {
       imeEndEvent,
       language: this.language,
       isIME: this.isIME,
-      target: this.textarea
+      textarea: this.textarea,
+      topElement: this.topElement
     });
   }
   setLanguage(language) {

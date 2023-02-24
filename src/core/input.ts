@@ -1,11 +1,13 @@
 import Language from "./language";
+import {getTextareaPosition,createElement} from "../utils/index.ts";
 
 type drawOptions={
   language:Language,
   inputEvent:InputEvent,
   isIME:boolean,
   imeEndEvent:CompositionEvent,
-  target:HTMLTextAreaElement,
+  textarea:HTMLTextAreaElement,
+  topElement:HTMLDivElement
 }
 export default function draw(options:drawOptions){
   const {
@@ -13,11 +15,22 @@ export default function draw(options:drawOptions){
     inputEvent,
     imeEndEvent,
     isIME,
-    target
+    textarea,
+    topElement
   } = options;
   if(isIME)return;
-  console.log(target.selectionStart,target.selectionEnd,target.selectionDirection);
+  //console.log(target.selectionStart,target.selectionEnd,target.selectionDirection);
+  //console.log(getTextareaPosition(target))
+  topElement.innerHTML="";
+  for(const char of textarea.value){
+    const elem=createElement("span",{
+      textContent:char
+    });
+    topElement.append(char);   
+  }
   language.highlight({
-    
+    setColor(start,end){
+      
+    }
   });
 }

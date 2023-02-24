@@ -1,4 +1,4 @@
-export default (tagName:string,options):HTMLElement=>{
+export default (tagName:string,options):HTMLElement | HTMLTextAreaElement=>{
   const tag:HTMLElement = document.createElement(tagName);
   if(options.style){
     Object.keys(options.style).forEach(style=>{
