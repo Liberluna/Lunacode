@@ -72,15 +72,14 @@ function draw(options) {
     textarea,
     topElement
   } = options;
+  const valueLength = textarea.value.length;
+  for (let i = 0; i !== valueLength; i++) {
+    const textareaChar = textarea.value[i];
+    const topElementChar = topElement;
+    console.log(textareaChar);
+  }
   if (isIME)
     return;
-  topElement.innerHTML = "";
-  for (const char of textarea.value) {
-    const elem = create_element_default("span", {
-      textContent: char
-    });
-    topElement.append(char);
-  }
   language.highlight({
     setColor(start, end) {
     }

@@ -18,16 +18,16 @@ export default function draw(options:drawOptions){
     textarea,
     topElement
   } = options;
-  if(isIME)return;
+  
   //console.log(target.selectionStart,target.selectionEnd,target.selectionDirection);
   //console.log(getTextareaPosition(target))
-  topElement.innerHTML="";
-  for(const char of textarea.value){
-    const elem=createElement("span",{
-      textContent:char
-    });
-    topElement.append(char);   
+  const valueLength=textarea.value.length;
+  for(let i=0;i!==valueLength;i++){
+    const textareaChar=textarea.value[i];
+    const topElementChar=topElement
+    console.log(textareaChar)
   }
+  if(isIME)return;
   language.highlight({
     setColor(start,end){
       
