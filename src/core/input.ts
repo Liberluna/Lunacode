@@ -7,7 +7,8 @@ type drawOptions={
   isIME:boolean,
   imeEndEvent:CompositionEvent,
   textarea:HTMLTextAreaElement,
-  topElement:HTMLDivElement
+  topElement:HTMLDivElement,
+  canvasAPI
 }
 export default function draw(options:drawOptions){
   const {

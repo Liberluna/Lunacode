@@ -1,5 +1,5 @@
-export default (tagName:string,options):HTMLElement | HTMLTextAreaElement=>{
-  const tag:HTMLElement = document.createElement(tagName);
+export default (tagName:string,options)=>{
+  const tag:HTMLDivElement|HTMLTextAreaElement|HTMLElement = document.createElement(tagName);
   if(options.style){
     Object.keys(options.style).forEach(style=>{
       tag.style[style]=options.style[style];

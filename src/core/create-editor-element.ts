@@ -8,7 +8,7 @@ export default ()=>{
       position:"relative"
     }
   })
-  const topElem=createElement("div",{
+  const canvas=createElement("canvas",{
     style:{
       width:"100%",
       height:"100%",
@@ -30,11 +30,11 @@ export default ()=>{
       size:"1em"
     }
   });
-  parent.append(topElem);
+  parent.append(canvas);
   parent.append(textarea);
   return {
     editorElement:parent,
     textarea:textarea,
-    topElement:topElem,
+    canvas:canvas,
   };
 }

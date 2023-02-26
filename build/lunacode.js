@@ -31,7 +31,7 @@ var create_editor_element_default = () => {
       position: "relative"
     }
   });
-  const topElem = create_element_default("div", {
+  const canvas = create_element_default("canvas", {
     style: {
       width: "100%",
       height: "100%",
@@ -53,12 +53,12 @@ var create_editor_element_default = () => {
       size: "1em"
     }
   });
-  parent.append(topElem);
+  parent.append(canvas);
   parent.append(textarea);
   return {
     editorElement: parent,
     textarea,
-    topElement: topElem
+    canvas
   };
 };
 
@@ -107,7 +107,8 @@ var LunacodeCore = class {
   editorElement;
   language;
   isIME;
-  topElement;
+  canvas;
+  canvasAPI;
   constructor(options) {
     options = object_safe_default(options, {
       element: document.createElement("div"),
@@ -118,7 +119,7 @@ var LunacodeCore = class {
     this.language = language;
     this.isIME = false;
     const text = element.textContent;
-    const { editorElement, textarea, topElement } = create_editor_element_default();
+    const { editorElement, textarea, canvas } = create_editor_element_default();
     element.append(editorElement);
     textarea.addEventListener("input", (event) => {
       this.#input({
@@ -138,7 +139,8 @@ var LunacodeCore = class {
     });
     this.editorElement = editorElement;
     this.textarea = textarea;
-    this.topElement = topElement;
+    this.canvas = canvas;
+    this.canvasAPI = canvas.getContext("2d");
   }
   #input({ inputEvent, imeEndEvent }) {
     draw.call(this, {
@@ -147,7 +149,8 @@ var LunacodeCore = class {
       language: this.language,
       isIME: this.isIME,
       textarea: this.textarea,
-      topElement: this.topElement
+      canvas: this.canvas,
+      canvasAPI: this.canvasAPI
     });
   }
   setLanguage(language) {
