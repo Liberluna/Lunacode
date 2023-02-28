@@ -1,5 +1,5 @@
 import Language from "./language";
-import {getTextareaPosition,createElement} from "../utils/index.ts";
+import {getTextareaPosition,createElement,enumerate} from "../utils/index.ts";
 
 type drawOptions={
   language:Language,
@@ -7,8 +7,11 @@ type drawOptions={
   isIME:boolean,
   imeEndEvent:CompositionEvent,
   textarea:HTMLTextAreaElement,
-  topElement:HTMLDivElement,
-  canvasAPI
+  canvas:HTMLCanvasElement,
+  canvasAPI:CanvasRenderingContext2D,
+  fontSize:number,
+  fontFamily:string,
+  lineHeight:number,
 }
 export default function draw(options:drawOptions){
   const {
@@ -17,17 +20,37 @@ export default function draw(options:drawOptions){
     imeEndEvent,
     isIME,
     textarea,
-    topElement
+    canvas,
+    canvasAPI,
+    fontSize,
+    fontFamily,
+    lineHeight,
   } = options;
-  
-  //console.log(target.selectionStart,target.selectionEnd,target.selectionDirection);
-  //console.log(getTextareaPosition(target))
-  const valueLength=textarea.value.length;
-  for(let i=0;i!==valueLength;i++){
-    const textareaChar=textarea.value[i];
-    const topElementChar=topElement
-    console.log(textareaChar)
+
+  canvas.width = canvas.getBoundingClientRect().width;
+  canvas.height = canvas.getBoundingClientRect().height;
+  canvasAPI.font = `${fontSize}px ${fontFamily}`;
+  canvasAPI.clearRect(0, 0, canvas.width, canvas.height);
+  const rows=[];
+  for(const [index,char] of enumerate(textarea.value)){
+    rows.push({
+      color:"#000",
+      char
+    });
   }
+
+  let line=0;
+  let row=0;
+  for(const [index,charData] of enumerate(rows)){
+    if(charData.char==="\n"){
+      line++;
+      row=0;
+    }else{
+      canvasAPI.fillText(charData.char, row*10, (lineHeight*(line+1))-(lineHeight-fontSize));
+      row++;
+    }
+  }
+
   if(isIME)return;
   language.highlight({
     setColor(start,end){

@@ -8,7 +8,7 @@ export default ()=>{
       position:"relative"
     }
   })
-  const canvas=createElement("canvas",{
+  const canvas:HTMLCanvasElement=createElement("canvas",{
     style:{
       width:"100%",
       height:"100%",
@@ -16,6 +16,7 @@ export default ()=>{
       position:"absolute"
     }
   });
+
   const textarea=createElement("textarea",{
     style:{
       border:"none",
@@ -27,7 +28,8 @@ export default ()=>{
       backgroundColor:"transparent",
       position:"absolute",
       color:"transparent",
-      size:"1em"
+      padding:"0px",
+      caretColor:"#000",
     }
   });
   parent.append(canvas);

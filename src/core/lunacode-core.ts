@@ -12,12 +12,21 @@ export default class LunacodeCore{
   isIME:boolean;
   canvas:HTMLElement;
   canvasAPI;
+  #fontSize:number;
+  #fontFamily:string;
+  #lineHeight:number;
   constructor(options){
     options=objectSafe(options,{
       element:document.createElement("div"),
-      language:new TextLanguage()
+      language:new TextLanguage(),
+      fontSize:23,
+      fontFamily:"sans-serif",
+      lineHeight:30
     });
-    const {element,language} = options;
+    this.#fontSize=options.fontSize;
+    this.#fontFamily=options.fontFamily;
+    this.#lineHeight=options.lineHeight;
+    const {element,language,fontFamily} = options;
 
     this.element=element;
     this.language=language;
@@ -27,7 +36,9 @@ export default class LunacodeCore{
     // child to
     const {editorElement,textarea,canvas}=createEditorElement();
     element.append(editorElement);
-    
+    textarea.style.fontSize=options.fontSize+"px";
+    textarea.style.fontFamily=options.fontFamily
+    textarea.style.lineHeight=options.lineHeight+"px";
     textarea.addEventListener("input",(event)=>{
       this.#input({
         inputEvent:event,
@@ -57,7 +68,10 @@ export default class LunacodeCore{
       isIME:this.isIME,
       textarea:this.textarea,
       canvas:this.canvas,
-      canvasAPI:this.canvasAPI
+      canvasAPI:this.canvasAPI,
+      fontSize:this.#fontSize,
+      fontFamily:this.#fontFamily,
+      lineHeight:this.#lineHeight,
     });
   }
   setLanguage(language:Language){

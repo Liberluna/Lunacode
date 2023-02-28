@@ -21,6 +21,17 @@ var create_element_default = (tagName, options) => {
   return tag;
 };
 
+// src/utils/enumerate.ts
+var enumerate_default = (arr) => {
+  const result = [];
+  let index = 0;
+  for (const element of arr) {
+    result.push([index, element]);
+    index++;
+  }
+  return result;
+};
+
 // src/core/create-editor-element.ts
 var create_editor_element_default = () => {
   const parent = create_element_default("div", {
@@ -50,7 +61,8 @@ var create_editor_element_default = () => {
       backgroundColor: "transparent",
       position: "absolute",
       color: "transparent",
-      size: "1em"
+      padding: "0px",
+      caretColor: "#000"
     }
   });
   parent.append(canvas);
@@ -70,13 +82,33 @@ function draw(options) {
     imeEndEvent,
     isIME,
     textarea,
-    topElement
+    canvas,
+    canvasAPI,
+    fontSize,
+    fontFamily,
+    lineHeight
   } = options;
-  const valueLength = textarea.value.length;
-  for (let i = 0; i !== valueLength; i++) {
-    const textareaChar = textarea.value[i];
-    const topElementChar = topElement;
-    console.log(textareaChar);
+  canvas.width = canvas.getBoundingClientRect().width;
+  canvas.height = canvas.getBoundingClientRect().height;
+  canvasAPI.font = `${fontSize}px ${fontFamily}`;
+  canvasAPI.clearRect(0, 0, canvas.width, canvas.height);
+  const rows = [];
+  for (const [index, char] of enumerate_default(textarea.value)) {
+    rows.push({
+      color: "#000",
+      char
+    });
+  }
+  let line = 0;
+  let row = 0;
+  for (const [index, charData] of enumerate_default(rows)) {
+    if (charData.char === "\n") {
+      line++;
+      row = 0;
+    } else {
+      canvasAPI.fillText(charData.char, row * 10, lineHeight * (line + 1) - (lineHeight - fontSize));
+      row++;
+    }
   }
   if (isIME)
     return;
@@ -109,18 +141,30 @@ var LunacodeCore = class {
   isIME;
   canvas;
   canvasAPI;
+  #fontSize;
+  #fontFamily;
+  #lineHeight;
   constructor(options) {
     options = object_safe_default(options, {
       element: document.createElement("div"),
-      language: new TextLanguage()
+      language: new TextLanguage(),
+      fontSize: 23,
+      fontFamily: "sans-serif",
+      lineHeight: 30
     });
-    const { element, language } = options;
+    this.#fontSize = options.fontSize;
+    this.#fontFamily = options.fontFamily;
+    this.#lineHeight = options.lineHeight;
+    const { element, language, fontFamily } = options;
     this.element = element;
     this.language = language;
     this.isIME = false;
     const text = element.textContent;
     const { editorElement, textarea, canvas } = create_editor_element_default();
     element.append(editorElement);
+    textarea.style.fontSize = options.fontSize + "px";
+    textarea.style.fontFamily = options.fontFamily;
+    textarea.style.lineHeight = options.lineHeight + "px";
     textarea.addEventListener("input", (event) => {
       this.#input({
         inputEvent: event,
@@ -150,7 +194,10 @@ var LunacodeCore = class {
       isIME: this.isIME,
       textarea: this.textarea,
       canvas: this.canvas,
-      canvasAPI: this.canvasAPI
+      canvasAPI: this.canvasAPI,
+      fontSize: this.#fontSize,
+      fontFamily: this.#fontFamily,
+      lineHeight: this.#lineHeight
     });
   }
   setLanguage(language) {
