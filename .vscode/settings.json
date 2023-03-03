@@ -2,10 +2,12 @@
     "code-runner.runInTerminal": true,
     "code-runner.executorMap":{
         "typescript":"deno run -A $fullFileName",
+        "javascript":"deno run -A $fullFileName",
     },
     "terminal.integrated.shell.windows": "C:\\Windows\\System32\\bash.exe",
     "deno.enable": false,
     "[typescript]": {
         "editor.tabSize": 2
-    }
+    },
+
 }
